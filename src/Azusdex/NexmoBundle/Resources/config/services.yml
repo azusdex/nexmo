@@ -1,0 +1,4 @@
+services:
+    nexmo.account:
+        class: Azusdex\NexmoBundle\Model\NexmoAccount
+        arguments: [%nexmo_api_key%,%nexmo_api_secret%]

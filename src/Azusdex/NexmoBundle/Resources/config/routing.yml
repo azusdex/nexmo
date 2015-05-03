@@ -1,0 +1,3 @@
+nexmo_balance:
+    path:     /nexmo/balance
+    defaults: { _controller: NexmoBundle:Nexmo:accountBalance }
