@@ -1,0 +1,8 @@
+{
+  "name": "azusdex/nexmo",
+  "autoload": {
+    "psr-0": {
+      "Azusdex\\NexmoBundle" : "src"
+    }
+  }
+}
