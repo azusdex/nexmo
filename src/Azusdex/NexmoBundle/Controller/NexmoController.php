@@ -16,5 +16,4 @@ class NexmoController extends Controller{
 
         die(json_encode($service->getAccountBalance()));
     }
-
 }

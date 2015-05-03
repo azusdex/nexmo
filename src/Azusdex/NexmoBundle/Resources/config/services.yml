@@ -2,3 +2,9 @@ services:
     nexmo.account:
         class: Azusdex\NexmoBundle\Model\NexmoAccount
         arguments: [%nexmo_api_key%,%nexmo_api_secret%]
+    nexmo.message:
+        class: Azusdex\NexmoBundle\Model\NexmoMessage
+        arguments: [%nexmo_api_key%,%nexmo_api_secret%]
+    nexmo.api:
+        class: Azusdex\NexmoBundle\Model\NexmoApi
+        arguments: [%nexmo_api_key%,%nexmo_api_secret%]

@@ -9,42 +9,53 @@
 namespace Azusdex\NexmoBundle\Model;
 
 class NexmoAccount {
-    protected $api_url;
-    protected $api_key;
-    protected $api_secret;
-
-    const HTTP_RESPONSE_SUCCESS_CODE = 200;
+    protected $api;
 
     public function __construct($api_key, $api_secret) {
-        $this->api_url = 'https://rest.nexmo.com';
-        $this->api_key = $api_key;
-        $this->api_secret = $api_secret;
+        $this->api = new NexmoApi($api_key, $api_secret);
     }
 
-    protected function sendRequest($url, $params = array()) {
-        $params['api_key'] = $this->api_key;
-        $params['api_secret'] = $this->api_secret;
-
-        $request_url = $this->api_url.'/'.trim($url,'/').'?'.http_build_query($params);
-
-        $request = curl_init($request_url);
-        curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($request, CURLOPT_HTTPHEADER, array('Accept: application/json'));
-        $response = curl_exec($request);
-        $info = curl_getinfo($request);
-        $response_code = (int)$info['http_code'];
-        curl_close($request);
-
-        switch($response_code) {
-            case self::HTTP_RESPONSE_SUCCESS_CODE:
-                return json_decode($response, true);
-            default:
-                return array('status' => 'ERROR', 'message' => $response);
-        }
-    }
-
+    /**
+     * Retrieve your current account balance.
+     * @return array|mixed
+     */
     public function getAccountBalance() {
-        return $this->sendRequest('/account/get-balance');
+        return $this->api->sendRequest('/account/get-balance');
+    }
+
+    /**
+     * Retrieve our outbound pricing for a given country.
+     * @param $code
+     * @return array|mixed
+     */
+    public function getPriceByCountryCode($code) {
+        return $this->api->sendRequest('/account/get-pricing/outbound', array('country' => $code));
+    }
+
+    /**
+     * Retrieve our outbound pricing for a given international prefix.
+     * @param $prefix
+     * @return array|mixed
+     */
+    public function getPriceByPrefixCode($prefix) {
+        return $this->api->sendRequest('/account/get-prefix-pricing/outbound', array('prefix' => $prefix));
+    }
+
+    /**
+     * Retrieve our outbound pricing for a phone number.
+     * @param $phone
+     * @param string $type
+     * @return array|mixed
+     */
+    public function getCredentials($phone, $type = 'sms') {
+        return $this->api->sendRequest('/account/get-phone-pricing/outbound/'.$type, array('phone' => $phone));
+    }
+
+    /**
+     * Get all inbound numbers associated with your Nexmo account.
+     * @return array|mixed
+     */
+    public function inboundNumbers() {
+        return $this->api->sendRequest('account/numbers');
     }
 }
